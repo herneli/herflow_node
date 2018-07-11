@@ -4,9 +4,11 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('herflow:server');
-var http = require('http');
+import app from './app'
+import Debug from  'debug'
+import http from 'http'
+
+var debug = Debug('herflow:server');
 
 /**
  * Get port from environment and store in Express.
