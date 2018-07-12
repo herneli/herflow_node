@@ -13,10 +13,13 @@ class TaskBase {
         this.options = {};
     }
 
+    clearOptions(){
+        this.options = "";
+    }
+
     validate(workflow)
     {
-        throw { message: "this.options is not an object" }
-        if (_.isObject(this.options)) throw "this.options is not an object";
+        if (!_.isObject(this.options)) throw new Error("'options' property is not an object.")
     }
 
     execute(workflow){

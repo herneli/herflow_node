@@ -1,11 +1,19 @@
 #!/usr/bin/env node
+'use strict';
+
+var _app = require('./app');
+
+var _app2 = _interopRequireDefault(_app);
+
+var _http = require('http');
+
+var _http2 = _interopRequireDefault(_http);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Module dependencies.
  */
-
-import app from './app'
-import http from 'http'
 
 var debug = require('debug')('herflow:server');
 
@@ -14,13 +22,13 @@ var debug = require('debug')('herflow:server');
  */
 
 var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+_app2.default.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = _http2.default.createServer(_app2.default);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -59,9 +67,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -84,8 +90,7 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+//# sourceMappingURL=server.js.map

@@ -5,9 +5,9 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   let task = new TaskBase();
-  task.options = ""
   task.validate();
-  res.render('index', { title: "HERFLOW" });
+  const message = "HERFLOW12";
+  res.render('index', { title: message });
 });
 
 export default router;
