@@ -19,7 +19,7 @@ var router = _express2.default.Router();
 router.get('/', function (req, res, next) {
   var task = new _TaskBase2.default();
   task.validate();
-  var message = "HERFLOW12";
+  var message = "HERFLOW";
   res.render('index', { title: message });
 });
 

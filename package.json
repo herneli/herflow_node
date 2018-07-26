@@ -3,27 +3,23 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "babel-node": "babel-node --presets=latest",
+    "babel-node": "babel-node --presets=env",
     "start": "nodemon --exec npm run babel-node -- ./src/server.js",
-    "build": "babel src -d dist --copy-files --source-maps --watch"
+      "build": "babel src -d dist --copy-files --source-maps"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
     "express": "~4.16.0",
+    "express-oauth-server": "^2.0.0",
     "http-errors": "~1.6.2",
     "lodash": "^4.17.10",
     "morgan": "~1.9.0"
   },
-  "babel": {
-    "presets": [
-      "latest"
-    ]
-  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-latest": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
     "nodemon": "^1.18.1"
   }
 }

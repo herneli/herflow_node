@@ -6,7 +6,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   let task = new TaskBase();
   task.validate();
-  const message = "HERFLOW12";
+  const message = "HERFLOW";
   res.render('index', { title: message });
 });
 

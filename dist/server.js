@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict';
 
 var _app = require('./app');
@@ -10,10 +9,6 @@ var _http = require('http');
 var _http2 = _interopRequireDefault(_http);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Module dependencies.
- */
 
 var debug = require('debug')('herflow:server');
 
