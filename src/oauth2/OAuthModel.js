@@ -1,31 +1,59 @@
-
+import jwt from "jsonwebtoken";
+import moment from "moment";
 /**
  * Constructor.
  */
 
 class InMemoryCache {
-  constructor(){
-    this.clients = [{ clientId : 'thom', clientSecret : 'nightworld', redirectUris : [''], grants: ['password'] }];
+  constructor() {
+    this.clients = [
+      {
+        clientId: "client01",
+        clientSecret: "secret01",
+        redirectUris: [""],
+        grants: ["password"]
+      }
+    ];
     this.tokens = [];
-    this.users = [{ id : '123', username: 'thomseddon', password: 'nightworld' }];
+    this.users = [
+      {
+        id: "1",
+        username: "jordi",
+        name: "Jordi Hernández Amo",
+        password: "pass"
+      }
+    ];
   }
 
-/**
- * Dump the cache.
- */
+  /**
+   * Dump the cache.
+   */
 
   dump() {
-    console.log('clients', this.clients);
-    console.log('tokens', this.tokens);
-    console.log('users', this.users);
+    console.log("clients", this.clients);
+    console.log("tokens", this.tokens);
+    console.log("users", this.users);
   }
 
   getAccessToken(bearerToken) {
-    var tokens = this.tokens.filter(function(token) {
-      return token.accessToken === bearerToken;
-    });
+    // var tokens = this.tokens.filter(function(token) {
+    //   return token.accessToken === bearerToken;
+    // });
 
-    return tokens.length ? tokens[0] : false;
+    // return tokens.length ? tokens[0] : false;
+    const secret = process.env.JWT_SECRET;
+    try {
+      let token = jwt.verify(bearerToken, secret);
+    } catch (error) {
+      console.log(error.message);
+      return false;
+    }
+    console.log(token);
+    return {
+      accessTokenExpiresAt: moment.unix(token.exp).toDate(),
+      client_id: token.aud,
+      user: token.sub
+    };
   }
 
   getRefreshToken(bearerToken) {
@@ -38,7 +66,7 @@ class InMemoryCache {
 
   getClient(clientId, clientSecret) {
     var clients = this.clients.filter(function(client) {
-      return client.clientId === clientId && client.clientSecret === clientSecret;
+      return client.clientId === clientId;
     });
 
     return clients.length ? clients[0] : false;
@@ -55,7 +83,7 @@ class InMemoryCache {
       userId: user.id,
       user: user
     };
-    this.tokens.push(tokenData);
+    //this.tokens.push(tokenData);
     return tokenData;
   }
 
@@ -65,6 +93,18 @@ class InMemoryCache {
     });
 
     return users.length ? users[0] : false;
+  }
+
+  generateAccessToken(client, user, scope) {
+    const secret = process.env.JWT_SECRET;
+    const iss = process.env.JWT_ISSUER;
+    return jwt.sign(
+      { name: user.name, aud: client.clientId, iss, sub: user.username },
+      secret,
+      {
+        expiresIn: 60 * 30
+      }
+    );
   }
 }
 export default InMemoryCache;

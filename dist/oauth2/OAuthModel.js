@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -16,9 +16,14 @@ var InMemoryCache = function () {
   function InMemoryCache() {
     _classCallCheck(this, InMemoryCache);
 
-    this.clients = [{ clientId: 'thom', clientSecret: 'nightworld', redirectUris: [''], grants: ['password'] }];
+    this.clients = [{
+      clientId: "client01",
+      clientSecret: "secret01",
+      redirectUris: [""],
+      grants: ["password"]
+    }];
     this.tokens = [];
-    this.users = [{ id: '123', username: 'thomseddon', password: 'nightworld' }];
+    this.users = [{ id: "1", username: "jordi", password: "pass" }];
   }
 
   /**
@@ -26,14 +31,14 @@ var InMemoryCache = function () {
    */
 
   _createClass(InMemoryCache, [{
-    key: 'dump',
+    key: "dump",
     value: function dump() {
-      console.log('clients', this.clients);
-      console.log('tokens', this.tokens);
-      console.log('users', this.users);
+      console.log("clients", this.clients);
+      console.log("tokens", this.tokens);
+      console.log("users", this.users);
     }
   }, {
-    key: 'getAccessToken',
+    key: "getAccessToken",
     value: function getAccessToken(bearerToken) {
       var tokens = this.tokens.filter(function (token) {
         return token.accessToken === bearerToken;
@@ -42,7 +47,7 @@ var InMemoryCache = function () {
       return tokens.length ? tokens[0] : false;
     }
   }, {
-    key: 'getRefreshToken',
+    key: "getRefreshToken",
     value: function getRefreshToken(bearerToken) {
       var tokens = this.tokens.filter(function (token) {
         return token.refreshToken === bearerToken;
@@ -51,16 +56,16 @@ var InMemoryCache = function () {
       return tokens.length ? tokens[0] : false;
     }
   }, {
-    key: 'getClient',
+    key: "getClient",
     value: function getClient(clientId, clientSecret) {
       var clients = this.clients.filter(function (client) {
-        return client.clientId === clientId && client.clientSecret === clientSecret;
+        return client.clientId === clientId;
       });
 
       return clients.length ? clients[0] : false;
     }
   }, {
-    key: 'saveToken',
+    key: "saveToken",
     value: function saveToken(token, client, user) {
       var tokenData = {
         accessToken: token.accessToken,
@@ -76,7 +81,7 @@ var InMemoryCache = function () {
       return tokenData;
     }
   }, {
-    key: 'getUser',
+    key: "getUser",
     value: function getUser(username, password) {
       var users = this.users.filter(function (user) {
         return user.username === username && user.password === password;
