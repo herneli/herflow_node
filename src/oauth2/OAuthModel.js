@@ -44,16 +44,15 @@ class InMemoryCache {
     const secret = process.env.JWT_SECRET;
     try {
       let token = jwt.verify(bearerToken, secret);
+      return {
+        accessTokenExpiresAt: moment.unix(token.exp).toDate(),
+        client_id: token.aud,
+        user: token.sub
+      };
     } catch (error) {
       console.log(error.message);
       return false;
     }
-    console.log(token);
-    return {
-      accessTokenExpiresAt: moment.unix(token.exp).toDate(),
-      client_id: token.aud,
-      user: token.sub
-    };
   }
 
   getRefreshToken(bearerToken) {

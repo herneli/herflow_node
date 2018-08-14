@@ -1,26 +1,24 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _express = require('express');
+var _express = require("express");
 
 var _express2 = _interopRequireDefault(_express);
 
-var _TaskBase = require('../model/TaskBase');
+var _models = require("../models");
 
-var _TaskBase2 = _interopRequireDefault(_TaskBase);
+var _models2 = _interopRequireDefault(_models);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  var task = new _TaskBase2.default();
-  task.validate();
+router.get("/", function (req, res, next) {
   var message = "HERFLOW";
-  res.render('index', { title: message });
+  res.render("index", { title: message });
 });
 
 exports.default = router;

@@ -1,23 +1,28 @@
-'use strict';
+"use strict";
 
-var _app = require('./app');
+var _app = require("./app");
 
 var _app2 = _interopRequireDefault(_app);
 
-var _http = require('http');
+var _http = require("http");
 
 var _http2 = _interopRequireDefault(_http);
 
+var _models = require("./models");
+
+var _models2 = _interopRequireDefault(_models);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var debug = require('debug')('herflow:server');
+var debug = require("debug")("herflow:src:server");
+require("dotenv").config();
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
-_app2.default.set('port', port);
+var port = normalizePort(process.env.PORT || "3000");
+_app2.default.set("port", port);
 
 /**
  * Create HTTP server.
@@ -26,12 +31,13 @@ _app2.default.set('port', port);
 var server = _http2.default.createServer(_app2.default);
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Listen on provided port, on all network interfaces after sequelize is ready
  */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+_models2.default.sequelize.sync().then(function () {
+  server.listen(port);
+  server.on("error", onError);
+  server.on("listening", onListening);
+});
 
 /**
  * Normalize a port into a number, string, or false.
@@ -58,20 +64,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
+  if (error.syscall !== "listen") {
     throw error;
   }
 
-  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
       process.exit(1);
       break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
       process.exit(1);
       break;
     default:
@@ -85,7 +91,7 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  debug("Listening on " + bind);
 }
 //# sourceMappingURL=server.js.map

@@ -1,13 +1,11 @@
-import express from 'express'
-import TaskBase from '../model/TaskBase'
+import express from "express";
+import db from "../models";
 
 var router = express.Router();
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  let task = new TaskBase();
-  task.validate();
+router.get("/", function(req, res, next) {
   const message = "HERFLOW";
-  res.render('index', { title: message });
+  res.render("index", { title: message });
 });
 
 export default router;

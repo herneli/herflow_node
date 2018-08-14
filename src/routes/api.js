@@ -1,12 +1,13 @@
 import express from "express";
-var router = express.Router();
+import models from "../models";
+
+let router = express.Router();
 
 /* GET home page. */
 router.get("/", function(req, res, next) {
-  let task = new TaskBase();
-  task.validate();
-  const message = "API";
-  res.send("API!!!");
+  models.User.findAll().then(function(users) {
+    res.json(users);
+  });
 });
 
 export default router;

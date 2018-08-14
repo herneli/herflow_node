@@ -40,7 +40,17 @@ var _index = require("./routes/index");
 
 var _index2 = _interopRequireDefault(_index);
 
+var _api = require("./routes/api");
+
+var _api2 = _interopRequireDefault(_api);
+
+var _debug = require("debug");
+
+var _debug2 = _interopRequireDefault(_debug);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var debug = (0, _debug2.default)("test:server");
 
 var app = (0, _express2.default)();
 
@@ -48,7 +58,6 @@ app.oauth = new _expressOauthServer2.default({
   model: new _OAuthModel2.default(), // See https://github.com/oauthjs/node-oauth2-server for specification
   requireClientAuthentication: { password: false }
 });
-
 // view engine setup
 app.set("views", _path2.default.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -60,14 +69,20 @@ app.use((0, _cookieParser2.default)());
 app.use(_express2.default.static(_path2.default.join(__dirname, "public")));
 
 app.use("/", _index2.default);
+app.use("/api", _api2.default);
 
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 
 app.post("/oauth/token", app.oauth.token());
 
-// // Enter the secure area
-// app.use(app.oauth.authorize());
+// Enter the secure area
+//app.use("/api", app.oauth.authenticate(), apiRouter);
+// Get secret.
+app.get("/secret", app.oauth.authenticate(), function (req, res) {
+  // Will require a valid access_token.
+  res.send("Secret area");
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
