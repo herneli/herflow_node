@@ -66,7 +66,8 @@ var InMemoryCache = function () {
         return {
           accessTokenExpiresAt: _moment2.default.unix(token.exp).toDate(),
           client_id: token.aud,
-          user: token.sub
+          user: token.sub,
+          zapato: "Manolo"
         };
       } catch (error) {
         console.log(error.message);

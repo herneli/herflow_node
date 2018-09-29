@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken";
 import moment from "moment";
+import bcrypt from "bcrypt";
+import UnitOfWorkFactory from "../uow/UnitOfWorkFactory";
+import UserRepository from "../repos/UserRepository";
+import config from "../config";
 /**
  * Constructor.
  */
@@ -15,14 +19,6 @@ class InMemoryCache {
       }
     ];
     this.tokens = [];
-    this.users = [
-      {
-        id: "1",
-        username: "jordi",
-        name: "Jordi Hernández Amo",
-        password: "pass"
-      }
-    ];
   }
 
   /**
@@ -41,7 +37,7 @@ class InMemoryCache {
     // });
 
     // return tokens.length ? tokens[0] : false;
-    const secret = process.env.JWT_SECRET;
+    const secret = config.jwt.secret;
     try {
       let token = jwt.verify(bearerToken, secret);
       return {
@@ -79,7 +75,7 @@ class InMemoryCache {
       client: client,
       refreshToken: token.refreshToken,
       refreshTokenExpiresAt: token.refreshTokenExpiresAt,
-      userId: user.id,
+      userId: user.usercode,
       user: user
     };
     //this.tokens.push(tokenData);
@@ -87,18 +83,28 @@ class InMemoryCache {
   }
 
   getUser(username, password) {
-    var users = this.users.filter(function(user) {
-      return user.username === username && user.password === password;
+    return UnitOfWorkFactory.create().then(uow => {
+      let userRepo = new UserRepository(uow);
+      return userRepo.getByUserCode(username).then(user => {
+        uow.release();
+        if (user) {
+          if (bcrypt.compareSync(password, user.password)) {
+            return user;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      });
     });
-
-    return users.length ? users[0] : false;
   }
 
   generateAccessToken(client, user, scope) {
-    const secret = process.env.JWT_SECRET;
-    const iss = process.env.JWT_ISSUER;
+    const secret = config.jwt.secret;
+    const iss = config.jwt.issuer;
     return jwt.sign(
-      { name: user.name, aud: client.clientId, iss, sub: user.username },
+      { name: user.name, aud: client.clientId, iss, sub: user.usercode },
       secret,
       {
         expiresIn: 60 * 30

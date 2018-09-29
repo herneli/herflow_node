@@ -1,15 +1,13 @@
 import app from "./app";
 import http from "http";
-import models from "./models";
-
+import config from "./config";
 var debug = require("debug")("herflow:src:server");
-require("dotenv").config();
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || "3000");
+var port = normalizePort(config.app.port);
 app.set("port", port);
 
 /**
@@ -21,11 +19,9 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces after sequelize is ready
  */
-models.sequelize.sync().then(function() {
-  server.listen(port);
-  server.on("error", onError);
-  server.on("listening", onListening);
-});
+server.listen(port);
+server.on("error", onError);
+server.on("listening", onListening);
 
 /**
  * Normalize a port into a number, string, or false.

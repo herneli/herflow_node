@@ -8,7 +8,9 @@ import OAuthServer from "express-oauth-server";
 import OAuthModel from "./oauth2/OAuthModel";
 import indexRouter from "./routes/index";
 import apiRouter from "./routes/api";
+import userRouter from "./routes/user";
 import debugModule from "debug";
+import { autocomplete, addConnection } from "./uow";
 
 const debug = debugModule("test:server");
 
@@ -28,8 +30,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Mysql
+app.use(autocomplete);
+app.use(addConnection);
+
 app.use("/", indexRouter);
-app.use("/api", apiRouter);
+app.use("/api", userRouter);
+app.use("/api", app.oauth.authenticate(), apiRouter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

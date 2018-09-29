@@ -19,6 +19,7 @@ var router = _express2.default.Router();
 /* GET home page. */
 router.get("/", function (req, res, next) {
   _models2.default.User.findAll().then(function (users) {
+    console.log(res);
     res.json(users);
   });
 });
