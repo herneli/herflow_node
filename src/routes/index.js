@@ -9,11 +9,6 @@ router.get("/", function(req, res, next) {
 });
 
 router.get("/test", function(req, res, next) {
-  UnitOfWorkFactory.create(uow => {
-    uow.query("select * from users");
-    uow.release();
-  });
-  const message = "HERFLOW";
-  res.render("index", { title: message });
+  res.json(req.uow.getName());
 });
 export default router;

@@ -16,10 +16,13 @@ const debug = debugModule("test:server");
 
 var app = express();
 
+// Manage oauth
 app.oauth = new OAuthServer({
   model: new OAuthModel(), // See https://github.com/oauthjs/node-oauth2-server for specification
   requireClientAuthentication: { password: false }
 });
+const auth = app.oauth.authenticate();
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -30,13 +33,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Mysql
+// Mysql inject UOW
 app.use(autocomplete);
 app.use(addConnection);
 
 app.use("/", indexRouter);
 app.use("/api", userRouter);
-app.use("/api", app.oauth.authenticate(), apiRouter);
+app.use("/api", apiRouter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,7 +49,8 @@ app.post("/oauth/token", app.oauth.token());
 // Enter the secure area
 //app.use("/api", app.oauth.authenticate(), apiRouter);
 // Get secret.
-app.get("/secret", app.oauth.authenticate(), function(req, res) {
+
+app.get("/secret", auth, function(req, res) {
   // Will require a valid access_token.
   res.send("Secret area");
 });

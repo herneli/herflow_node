@@ -1,8 +1,8 @@
-import UnitOfWork from "./UnitOfWorkFactory";
+import UnitOfWorkFactory from "./UnitOfWorkFactory";
 
 function addConnection(req, res, next) {
-  UnitOfWork.create().then(uow => {
-    res.locals.uow = uow;
+  UnitOfWorkFactory.create().then(uow => {
+    req.uow = uow;
     next();
   });
 }

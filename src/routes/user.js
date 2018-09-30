@@ -4,9 +4,8 @@ import UserRepository from "../repos/UserRepository";
 import _ from "lodash";
 
 let router = express.Router();
-
 router.get("/users", function(req, res, next) {
-  let userRepository = new UserRepository(res.locals.uow);
+  let userRepository = new UserRepository(req.uow);
   userRepository
     .getAll()
     .then(users => {
@@ -18,7 +17,7 @@ router.get("/users", function(req, res, next) {
 });
 
 router.get("/users/:id", function(req, res, next) {
-  let userRepository = new UserRepository(res.locals.uow);
+  let userRepository = new UserRepository(req.uow);
   userRepository
     .getById(req.params.id)
     .then(user => {
@@ -34,7 +33,7 @@ router.get("/users/:id", function(req, res, next) {
 });
 
 router.post("/users", function(req, res, next) {
-  let userRepository = new UserRepository(res.locals.uow);
+  let userRepository = new UserRepository(req.uow);
   let user = userRepository.cleanApiUser(req.body);
   user.password = bcrypt.hashSync(user.password, 3);
 
@@ -49,7 +48,7 @@ router.post("/users", function(req, res, next) {
 });
 
 router.put("/users/:id", function(req, res, next) {
-  let userRepository = new UserRepository(res.locals.uow);
+  let userRepository = new UserRepository(req.uow);
   let user = userRepository.cleanApiUser(req.body);
   if (user.password) {
     user.password = bcrypt.hashSync(user.password, 3);

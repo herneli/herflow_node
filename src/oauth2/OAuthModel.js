@@ -32,6 +32,7 @@ class InMemoryCache {
   }
 
   getAccessToken(bearerToken) {
+    console.log("getAccessToken");
     // var tokens = this.tokens.filter(function(token) {
     //   return token.accessToken === bearerToken;
     // });
@@ -83,6 +84,7 @@ class InMemoryCache {
   }
 
   getUser(username, password) {
+    console.log("getUser");
     return UnitOfWorkFactory.create().then(uow => {
       let userRepo = new UserRepository(uow);
       return userRepo.getByUserCode(username).then(user => {

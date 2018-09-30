@@ -1,7 +1,7 @@
 function autocomplete(req, res, next) {
   function complete() {
-    if (res.locals.uow) {
-      res.locals.uow.release();
+    if (req.uow) {
+      req.uow.release();
     }
   }
   res.on("finish", complete);
