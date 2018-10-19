@@ -1,69 +1,43 @@
 import express from "express";
-import bcrypt from "bcrypt";
-import UserRepository from "../repos/UserRepository";
-import _ from "lodash";
+import db from "../models";
 
 let router = express.Router();
-router.get("/users", function(req, res, next) {
-  let userRepository = new UserRepository(req.uow);
-  userRepository
-    .getAll()
-    .then(users => {
-      res.json(users.map(userRepository.toApi));
-    })
-    .catch(err => {
-      next(err);
-    });
+
+/* GET home page. */
+router.get("/", function(req, res, next) {
+  db.User.findAll().then(users => {
+    res.json(users.map(user => user.toApi()));
+  });
 });
 
-router.get("/users/:id", function(req, res, next) {
-  let userRepository = new UserRepository(req.uow);
-  userRepository
-    .getById(req.params.id)
-    .then(user => {
-      if (user) {
-        res.json(userRepository.toApi(user));
-      } else {
-        res.sendStatus(404);
-      }
-    })
-    .catch(err => {
-      next(err);
-    });
-});
-
-router.post("/users", function(req, res, next) {
-  let userRepository = new UserRepository(req.uow);
-  let user = userRepository.cleanApiUser(req.body);
-  user.password = bcrypt.hashSync(user.password, 3);
-
-  userRepository
-    .insert(user)
-    .then(user => {
-      res.json(userRepository.toApi(user));
-    })
-    .catch(err => {
-      next(err);
-    });
-});
-
-router.put("/users/:id", function(req, res, next) {
-  let userRepository = new UserRepository(req.uow);
-  let user = userRepository.cleanApiUser(req.body);
-  if (user.password) {
-    user.password = bcrypt.hashSync(user.password, 3);
+router.get("/current/settings", function(req, res, next) {
+  if (req.user) {
+    res.json(req.user.toApi());
+  } else {
+    res.sendStatus(404);
   }
-  userRepository
-    .update(req.params.id, user)
+});
+
+router.post("/", function(req, res, next) {
+  let user = db.User.build(req.body);
+  user.hashPassword();
+  user
+    .save()
     .then(user => {
-      if (user) {
-        res.json(userRepository.toApi(user));
-      } else {
-        res.sendStatus(404);
-      }
+      res.json(user.toApi());
     })
-    .catch(err => {
-      next(err);
+    .catch(reason => {
+      res.status(500).json({ error: reason });
+    });
+});
+
+router.put("/:id", function(req, res, next) {
+  db.User.update(req.body, { where: { id: req.params.id } })
+    .then(user => {
+      res.json(user);
+    })
+    .catch(reason => {
+      res.status(500).json({ error: "Error updating DB" });
     });
 });
 

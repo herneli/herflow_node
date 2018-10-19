@@ -1,5 +1,4 @@
 import express from "express";
-import UnitOfWorkFactory from "../uow/UnitOfWorkFactory";
 
 var router = express.Router();
 /* GET home page. */

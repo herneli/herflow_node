@@ -1,5 +1,6 @@
 import app from "./app";
 import http from "http";
+import models from "./models";
 import config from "./config";
 var debug = require("debug")("herflow:src:server");
 
@@ -19,9 +20,11 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces after sequelize is ready
  */
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+models.sequelize.sync().then(function() {
+  server.listen(port);
+  server.on("error", onError);
+  server.on("listening", onListening);
+});
 
 /**
  * Normalize a port into a number, string, or false.

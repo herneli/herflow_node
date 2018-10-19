@@ -5,23 +5,20 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import logger from "morgan";
 import OAuthServer from "express-oauth-server";
-import OAuthModel from "./oauth2/OAuthModel";
+import OAuthModel from "./auth/OAuthModel";
 import indexRouter from "./routes/index";
-import apiRouter from "./routes/api";
 import userRouter from "./routes/user";
 import debugModule from "debug";
-import { autocomplete, addConnection } from "./uow";
-
+import passport from "./auth/passport";
 const debug = debugModule("test:server");
 
 var app = express();
 
 // Manage oauth
 app.oauth = new OAuthServer({
-  model: new OAuthModel(), // See https://github.com/oauthjs/node-oauth2-server for specification
+  model: new OAuthModel(),
   requireClientAuthentication: { password: false }
 });
-const auth = app.oauth.authenticate();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -33,13 +30,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Mysql inject UOW
-app.use(autocomplete);
-app.use(addConnection);
+let auth = passport.authenticate("jwt", { session: false });
 
 app.use("/", indexRouter);
-app.use("/api", userRouter);
-app.use("/api", apiRouter);
+app.use("/api/users", auth, userRouter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
