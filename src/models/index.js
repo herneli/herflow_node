@@ -1,7 +1,18 @@
 import Sequelize, { DataTypes } from "sequelize";
 import configEnvironments from "../config";
-import User from "./User";
+
+// Import entities
+import Activity from "./Activity";
 import Client from "./Client";
+import Entity from "./Entity";
+import EntityField from "./EntityField";
+import Form from "./Form";
+import Group from "./Group";
+import GroupUser from "./GroupUser";
+import Organization from "./Organization";
+import User from "./User";
+import UserOrganization from "./UserOrganization";
+import Workflow from "./Workflow";
 
 const config = configEnvironments.db;
 let db = {};
@@ -19,8 +30,17 @@ if (config.use_env_variable) {
 }
 
 // Load entities
-db.User = User(sequelize, DataTypes);
+db.Activity = Activity(sequelize, DataTypes);
 db.Client = Client(sequelize, DataTypes);
+db.Entity = Entity(sequelize, DataTypes);
+db.EntityField = EntityField(sequelize, DataTypes);
+db.Form = Form(sequelize, DataTypes);
+db.Group = Group(sequelize, DataTypes);
+db.GroupUser = GroupUser(sequelize, DataTypes);
+db.Organization = Organization(sequelize, DataTypes);
+db.User = User(sequelize, DataTypes);
+db.UserOrganization = UserOrganization(sequelize, DataTypes);
+db.Workflow = Workflow(sequelize, DataTypes);
 
 // Execute method "associate" for each entity
 Object.keys(db).forEach(modelName => {

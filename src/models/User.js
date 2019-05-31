@@ -15,12 +15,18 @@ export default function(sequelize, dataType) {
     language: dataType.STRING
   });
 
-  User.prototype.toApi = function() {
-    return _.pick(this.dataValues, ["id", "name", "language"]);
+  User.associate = function(models) {
+    models.User.belongsToMany(models.Organization, {
+      through: models.UserOrganization
+    });
   };
 
-  User.prototype.hashPassword = function() {
-    this.password = bcrypt.hashSync(this.password, 3);
+  User.prototype.toApi = function() {
+    return _.pick(this.dataValues, ["id", "name", "language", "email"]);
+  };
+
+  User.hashPassword = function(password) {
+    return bcrypt.hashSync(this.password, 3);
   };
 
   User.prototype.isValidPassword = function(password) {

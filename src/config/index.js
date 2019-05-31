@@ -9,12 +9,13 @@ export default {
     host: process.env.DB_HOST || "localhost",
     port: process.env.DB_PORT || "3306",
     database: process.env.DB_NAME || "herflow",
-    username: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "root",
+    username: process.env.DB_USER || "herflow",
+    password: process.env.DB_PASSWORD || "nald3aep",
     dialect: "mysql",
     operatorsAliases: false
     // logging: false
   },
+
   jwt: {
     secret: process.env.JWT_SECRET || "jwt_please_change",
     issuer: process.env.JWT_ISSUER || "http://www.herneli.com",

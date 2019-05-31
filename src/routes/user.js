@@ -20,7 +20,7 @@ router.get("/current/settings", function(req, res, next) {
 
 router.post("/", function(req, res, next) {
   let user = db.User.build(req.body);
-  user.hashPassword();
+  user.password = user.hashPassword(user.password);
   user
     .save()
     .then(user => {
@@ -32,6 +32,10 @@ router.post("/", function(req, res, next) {
 });
 
 router.put("/:id", function(req, res, next) {
+  let user = req.body;
+  if (user.password) {
+    user.password = db.User.hashPassword(user.password);
+  }
   db.User.update(req.body, { where: { id: req.params.id } })
     .then(user => {
       res.json(user);

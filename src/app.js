@@ -8,7 +8,12 @@ import OAuthServer from "express-oauth-server";
 import OAuthModel from "./auth/OAuthModel";
 import indexRouter from "./routes/index";
 import userRouter from "./routes/user";
+import organizationsRouter from "./routes/organization";
+import entitiesRouter from "./routes/entity";
+import contactsRouter from "./routes/contact";
+import workflowsRouter from "./routes/workflow";
 import debugModule from "debug";
+import cors from "cors";
 import passport from "./auth/passport";
 const debug = debugModule("test:server");
 
@@ -25,6 +30,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(logger("dev"));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -33,7 +39,11 @@ app.use(express.static(path.join(__dirname, "public")));
 let auth = passport.authenticate("jwt", { session: false });
 
 app.use("/", indexRouter);
-app.use("/api/users", auth, userRouter);
+app.use("/api/workflows", workflowsRouter);
+app.use("/api/organizations", organizationsRouter);
+app.use("/api/contacts", contactsRouter);
+app.use("/api/entities", entitiesRouter);
+app.use("/api/users", userRouter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
