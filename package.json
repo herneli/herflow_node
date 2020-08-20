@@ -8,7 +8,7 @@
     "build": "babel src -d dist --copy-files --source-maps"
   },
   "dependencies": {
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^5.0.0",
     "cors": "^2.8.4",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
